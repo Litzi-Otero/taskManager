@@ -1,0 +1,18 @@
+.profile-container {
+    padding: 20px;
+    background-color: #ede9e9;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border: 2px solid #D1A5CE;
+  }
+  
+  .profile-container h1 {
+    margin-bottom: 20px;
+    color: #3D253D;
+  }
+  
+  .profile-details p {
+    margin-bottom: 10px;
+    color: #3D253D;
+    font-size: 18px;
+  }

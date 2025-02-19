@@ -1,0 +1,40 @@
+.landing-container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 40px;
+    border: 2px solid #D1A5CE;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    background-color: #ede9e9;
+    text-align: center;
+  }
+  
+  .landing-container h1 {
+    margin-bottom: 30px;
+    color: #3D253D;
+    font-size: 36px;
+    font-weight: bold;
+  }
+  
+  .landing-container p {
+    margin-bottom: 30px;
+    color: #3D253D;
+    font-size: 18px;
+  }
+  
+  .login-link {
+    display: inline-block;
+    padding: 15px 30px;
+    background-color: #6b3a68;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+  
+  .login-link:hover {
+    background-color: #D1A5CE;
+  }
