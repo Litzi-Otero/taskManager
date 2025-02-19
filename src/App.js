@@ -5,6 +5,7 @@ import LoginPage from './pages/LoginPage/LoginPage';
 import DashboardPage from './pages/Dashboard/DashboardPage';
 import ProfilePage from './pages/ProfilePage/ProfilePage';
 import ContactPage from './pages/ContactPage/ContactPage';
+import RecordPage from './pages/RecordPage/RecordPage';
 import './App.css';
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/perfil" element={<ProfilePage />} />
         <Route path="/contacto" element={<ContactPage />} />
+        <Route path="/registro" element={<RecordPage />} />
       </Routes>
     </Router>
   );

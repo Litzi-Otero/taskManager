@@ -8,6 +8,7 @@ const LandingPage = () => {
       <h1>Bienvenido</h1>
       <p>Página de inicio.</p>
       <Link to="/login" className="login-link">Login</Link>
+      <Link to="/registro" className="registro-link">Registro</Link>
     </div>
   );
 };

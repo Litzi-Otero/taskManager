@@ -38,3 +38,20 @@
   .login-link:hover {
     background-color: #D1A5CE;
   }
+
+  .registro-link {
+    display: inline-block;
+    padding: 15px 30px;
+    background-color: #6b3a68;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+  
+  .registro-link:hover {
+    background-color: #D1A5CE;
+  }

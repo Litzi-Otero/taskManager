@@ -1,52 +1,84 @@
 import React, { useState } from 'react';
+import { Form, Input, Button, message, Typography } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import './LoginPage.css';
 
+const { Title } = Typography;
+
 const LoginPage = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
-    e.preventDefault();
+  const onFinish = async (values) => {
+    setLoading(true);
+    const { email, password } = values;
 
-    // Hardcoded credentials
-    const hardcodedUsername = 'admin';
-    const hardcodedPassword = '123';
+    try {
+      const response = await fetch('http://localhost:5000/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
-    if (username === hardcodedUsername && password === hardcodedPassword) {
-      navigate('/dashboard');
-    } else {
-      setError('Invalid username or password');
+      const data = await response.json();
+
+      if (response.ok) {
+        localStorage.setItem('authToken', data.token);
+
+        message.success('Ingreso exitoso');
+        navigate('/dashboard');
+      } else {
+        message.error(data.message || 'Error al iniciar sesión');
+      }
+    } catch (error) {
+      console.error('Error al iniciar sesión:', error);
+      message.error('Error en la conexión');
     }
+
+    setLoading(false);
   };
 
   return (
     <div className="login-container">
       <h1>Inicio de sesión</h1>
-      <form className="login-form" onSubmit={handleLogin}>
+      <Form name="login" layout="vertical" onFinish={onFinish}>
         <div className="form-group">
-          <label>Usuario:</label>
-          <input
-            type="text"
-            name="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
+          <label>Email:</label>
+          <Form.Item
+            name="email"
+            rules={[{ required: true, message: 'Por favor, ingrese su correo electrónico' }]}
+          >
+            <Input
+              type="email"
+              placeholder="Correo Electrónico"
+            />
+          </Form.Item>
         </div>
         <div className="form-group">
           <label>Contraseña:</label>
-          <input
-            type="password"
+          <Form.Item
             name="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+            rules={[{ required: true, message: 'Por favor, ingrese su contraseña' }]}
+          >
+            <Input.Password
+              placeholder="Contraseña"
+            />
+          </Form.Item>
         </div>
-        {error && <p className="error">{error}</p>}
-        <button type="submit" className="login-button">Iniciar</button>
-      </form>
+        <div className="form-group">
+          <Button
+            type="primary"
+            htmlType="submit"
+            block
+            loading={loading}
+            className="login-button"
+          >
+            Iniciar
+          </Button>
+        </div>
+      </Form>
     </div>
   );
 };
