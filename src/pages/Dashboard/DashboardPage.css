@@ -13,3 +13,40 @@
   .dashboard-container p {
     color: #666;
   }
+  .floating-button {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    background-color: #D1A5CE;
+  }
+  .floating-button:hover {
+    background-color: #3D253D;
+  }
+  .custom-modal .ant-modal-content {
+    background-color: #e5e5e5;
+  }
+  
+  .custom-modal .ant-modal-header {
+    background-color: #e5e5e5;
+  }
+  
+  .custom-modal .ant-modal-title {
+    color: #333;
+  }
+  
+  .custom-modal .ant-modal-footer .ant-btn-primary {
+    background-color: #D1A5CE;
+    border-color: #D1A5CE;
+  }
+  
+  .custom-modal .ant-modal-footer .ant-btn-primary:hover {
+    background-color: #3D253D;
+    border-color: #b38bb0;
+  }
