@@ -1,0 +1,53 @@
+.group-container {
+  padding: 20px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.add-group-button {
+  width: 150px;
+  height: 50px;
+  border-radius: 5px;
+  font-size: 16px;
+  background-color: #D1A5CE;
+}
+
+.add-group-button:hover {
+  background-color: #3D253D;
+}
+
+.custom-modal .ant-modal-content {
+  background-color: #e5e5e5;
+}
+
+.custom-modal .ant-modal-header {
+  background-color: #e5e5e5;
+}
+
+.custom-modal .ant-modal-title {
+  color: #333;
+}
+
+.custom-modal .ant-modal-footer .ant-btn-primary {
+  background-color: #D1A5CE;
+  border-color: #D1A5CE;
+}
+
+.custom-modal .ant-modal-footer .ant-btn-primary:hover {
+  background-color: #3D253D;
+  border-color: #b38bb0;
+}
+
+.list-item {
+  display: flex;
+  align-items: center;
+}
+
+.user-info {
+  margin-left: 10px;
+}

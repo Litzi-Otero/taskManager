@@ -1,52 +1,161 @@
-.dashboard-container {
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  .dashboard-container h1 {
-    margin-bottom: 20px;
-    color: #333;
-  }
-  
-  .dashboard-container p {
-    color: #666;
-  }
-  .floating-button {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    background-color: #D1A5CE;
-  }
-  .floating-button:hover {
-    background-color: #3D253D;
-  }
-  .custom-modal .ant-modal-content {
-    background-color: #e5e5e5;
-  }
-  
-  .custom-modal .ant-modal-header {
-    background-color: #e5e5e5;
-  }
-  
-  .custom-modal .ant-modal-title {
-    color: #333;
-  }
-  
-  .custom-modal .ant-modal-footer .ant-btn-primary {
-    background-color: #D1A5CE;
-    border-color: #D1A5CE;
-  }
-  
-  .custom-modal .ant-modal-footer .ant-btn-primary:hover {
-    background-color: #3D253D;
-    border-color: #b38bb0;
-  }
+.dashboard-container h1 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.dashboard-container p {
+  color: #666;
+}
+
+.floating-button {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  background-color: #D1A5CE;
+}
+
+.floating-button:hover {
+  background-color: #3D253D;
+}
+
+.custom-modal .ant-modal-content {
+  background-color: #e5e5e5;
+}
+
+.custom-modal .ant-modal-header {
+  background-color: #e5e5e5;
+}
+
+.custom-modal .ant-modal-title {
+  color: #333;
+}
+
+.custom-modal .ant-modal-footer {
+  display: flex;
+  justify-content: center; /* Centra los botones */
+}
+
+.custom-modal .ant-modal-footer .ant-btn-primary {
+  background-color: #D1A5CE;
+  border-color: #D1A5CE;
+}
+
+.custom-modal .ant-modal-footer .ant-btn-primary:hover {
+  background-color: #3D253D;
+  border-color: #b38bb0;
+}
+
+.ant-card {
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+.ant-card:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.ant-card-body {
+  padding: 16px;
+}
+
+.ant-card .ant-card-meta-title {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.card-title-container {
+  color: white; 
+  padding: 14px;
+  border-radius: 3px;
+  text-align: center; 
+  display: flex;
+  align-items: center;
+  justify-content: center; 
+  width: 100%; 
+  box-sizing: border-box; 
+}
+
+
+
+
+
+.group-tasks-modal .ant-modal-content {
+  background-color: #f0f2f5;
+  border-radius: 8px;
+  width: 145%;
+  max-width: 1600px; /* Establece un ancho máximo */
+}
+
+.group-tasks-modal .ant-modal-header {
+  background-color: #f0f2f5;
+  color: #3b3a3a;
+  border-radius: 8px 8px 0 0;
+}
+
+.group-tasks-modal .ant-modal-title {
+  color: #363636;
+}
+
+.group-tasks-modal .ant-modal-body {
+  padding: 24px;
+}
+
+.group-tasks-modal .ant-card {
+  width: 140%; /* Aumenta el ancho de las tarjetas */
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+.group-tasks-modal .ant-card:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.group-tasks-modal .ant-card-body {
+  padding: 16px;
+}
+
+.group-tasks-modal .ant-card .ant-card-meta-title {
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.group-tasks-modal .card-title-container {
+  color: white; 
+  padding: 14px;
+  border-radius: 3px;
+  text-align: center; 
+  display: flex;
+  align-items: center;
+  justify-content: center; 
+  width: 100%; 
+  box-sizing: border-box; 
+}
+
+.kanban-column {
+  background-color: #f0f2f5;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.kanban-column h3 {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.kanban-column-content {
+  min-height: 200px;
+}
+
+.kanban-card {
+  margin-bottom: 16px;
+}

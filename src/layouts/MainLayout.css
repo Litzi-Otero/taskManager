@@ -1,44 +1,84 @@
 .main-layout {
-    display: flex;
-    min-height: 100vh;
-    background-color: #f0f2f5;
-  }
-  
-  .sidebar {
-    width: 180px;
-    background-color: #3D253D;
-    padding: 20px;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-  }
-  
-  .sidebar nav ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  .sidebar nav ul li {
-    margin-bottom: 15px;
-  }
-  
-  .sidebar nav ul li a {
-    text-decoration: none;
-    color: #ffffff;
-    font-weight: bold;
-    display: block;
-    padding: 10px;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-  }
-  
-  .sidebar nav ul li a:hover {
-    background-color: #D1A5CE;
-  }
-  
-  .content {
-    flex: 1;
-    padding: 20px;
-    background-color: #ffffff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    margin: 20px;
-  }
+  display: flex;
+  min-height: 100vh;
+  background-color: #f0f2f5;
+}
+
+.sidebar {
+  width: 150px;
+  background-color: #3D253D;
+  padding: 20px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  transition: width 0.3s ease;
+}
+
+.sidebar.collapsed {
+  width: 50px;
+}
+
+.sidebar .toggle-button {
+  background: none;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 20px;
+  margin-bottom: 5px;
+}
+
+.sidebar nav ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.sidebar nav ul li {
+  margin-bottom: 15px;
+}
+
+.sidebar nav ul li a,
+.sidebar nav ul li .logout-button {
+  text-decoration: none;
+  color: #ffffff;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.sidebar nav ul li a:hover {
+  color: #D1A5CE;
+}
+
+.sidebar nav ul li svg {
+  margin-right: 8px;
+}
+
+.sidebar.collapsed nav ul li svg {
+  margin-right: 0;
+}
+
+.sidebar.collapsed nav ul li span {
+  display: none;
+}
+
+.sidebar nav ul li .logout-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  padding: 10;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+}
+
+.sidebar nav ul li .logout-button:hover {
+  color: #ff4d4f;
+}
+
+.content {
+  flex: 1;
+  padding: 20px;
+  margin: 20px;
+}

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Typography, Button, Modal, Form, Input, Select, DatePicker, Card, Row, Col } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import moment from 'moment';
+import moment from 'moment'; // Importar moment
 import './DashboardPage.css';
 import MainLayout from '../../layouts/MainLayout';
 
@@ -11,10 +11,13 @@ const { Option } = Select;
 const DashboardPage = () => {
   const navigate = useNavigate();
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [tasks, setTasks] = useState([]); // Tareas generales
+  const [isGroupModalVisible, setIsGroupModalVisible] = useState(false);
+  const [tasks, setTasks] = useState([]);
+  const [filteredTasks, setFilteredTasks] = useState([]);
   const [editingTask, setEditingTask] = useState(null);
   const [username, setUsername] = useState('');
   const [userRol, setUserRol] = useState('');
+  const [userGroup, setUserGroup] = useState(null);
   const formRef = useRef(null);
 
   useEffect(() => {
@@ -34,13 +37,30 @@ const DashboardPage = () => {
         localStorage.removeItem('authToken');
         navigate('/login');
       } else {
-        setUsername(decodedToken.username);
-        setUserRol(decodedToken.rol);
+        setUsername(decodedToken.username); // Asume que el token contiene el campo 'username'
+        setUserRol(decodedToken.rol); // Asume que el token contiene el campo 'role'
+
+        if (decodedToken.rol === 'user') {
+          const response = await fetch(`http://localhost:5000/api/user/group`, {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+            },
+          });
+          const data = await response.json();
+          if (data.group) {
+            setUserGroup(data.group);
+          }
+        }
       }
     };
 
+    // Verificar el token inmediatamente cuando se monta el componente
     checkToken();
+
+    // Establecer un intervalo para verificar el token cada 5 minutos (300000 ms)
     const intervalId = setInterval(checkToken, 300000);
+
+    // Limpiar el intervalo cuando el componente se desmonte
     return () => clearInterval(intervalId);
   }, [navigate]);
 
@@ -54,6 +74,7 @@ const DashboardPage = () => {
       });
       const data = await response.json();
       setTasks(data);
+      setFilteredTasks(data);
     };
 
     fetchTasks();
@@ -91,6 +112,7 @@ const DashboardPage = () => {
 
       let response;
       if (editingTask) {
+        // Editar tarea existente
         response = await fetch(`http://localhost:5000/api/edit/tasks/${editingTask.id}`, {
           method: 'PUT',
           headers: {
@@ -100,6 +122,7 @@ const DashboardPage = () => {
           body: JSON.stringify({ ...values, email }),
         });
       } else {
+        // Crear nueva tarea
         response = await fetch('http://localhost:5000/api/record/tasks', {
           method: 'POST',
           headers: {
@@ -119,6 +142,7 @@ const DashboardPage = () => {
         } else {
           setTasks([...tasks, newTask]);
         }
+        setFilteredTasks(tasks);
         setEditingTask(null);
       } else {
         console.error('Error al insertar la tarea');
@@ -133,6 +157,10 @@ const DashboardPage = () => {
     setEditingTask(null);
   };
 
+  const handleGroupModalCancel = () => {
+    setIsGroupModalVisible(false);
+  };
+
   const deleteTask = async (taskId) => {
     const token = localStorage.getItem('authToken');
     try {
@@ -144,6 +172,7 @@ const DashboardPage = () => {
       });
       if (response.ok) {
         setTasks(tasks.filter(task => task.id !== taskId));
+        setFilteredTasks(tasks.filter(task => task.id !== taskId));
       } else {
         console.error('Error al eliminar la tarea');
       }
@@ -167,10 +196,23 @@ const DashboardPage = () => {
     }
   };
 
+  const filterTasksByGroup = () => {
+    if (userGroup) {
+      const groupTasks = tasks.filter(task => task.groupId === userGroup.id);
+      setFilteredTasks(groupTasks);
+      setIsGroupModalVisible(true);
+    }
+  };
+
   return (
     <MainLayout>
       <div className="dashboard-container">
         <h2>Bienvenido, {username}!</h2>
+        {userRol === 'user' && userGroup && (
+          <Button type="primary" onClick={filterTasksByGroup}>
+            Grupo: {userGroup.name}
+          </Button>
+        )}
         <p>TAREAS</p>
         <Button
           type="primary"
@@ -187,7 +229,7 @@ const DashboardPage = () => {
           className="custom-modal"
         >
           <Form layout="vertical" ref={formRef}>
-            <Form.Item label="Nombre de la Tarea" name="name_task" rules={[{ required: true, message: 'Por favor ingrese el nombre de la tarea' }]} >
+            <Form.Item label="Nombre de la Tarea" name="name_task" rules={[{ required: true, message: 'Por favor ingrese el nombre de la tarea' }]}>
               <Input />
             </Form.Item>
             <Form.Item label="Descripción" name="description">
@@ -196,7 +238,7 @@ const DashboardPage = () => {
             <Form.Item label="Tiempo hasta finalizar / Recordarme" name="dead_line">
               <DatePicker showTime />
             </Form.Item>
-            <Form.Item label="Estado" name="status" rules={[{ required: true, message: 'Por favor seleccione el estado' }]} >
+            <Form.Item label="Estado" name="status" rules={[{ required: true, message: 'Por favor seleccione el estado' }]}>
               <Select>
                 <Option value="in-progress">En Progreso</Option>
                 <Option value="done">Hecho</Option>
@@ -209,9 +251,14 @@ const DashboardPage = () => {
             </Form.Item>
           </Form>
         </Modal>
-        <div>
+        <Modal
+          title={`Tareas del Grupo: ${userGroup ? userGroup.name : ''}`}
+          visible={isGroupModalVisible}
+          onCancel={handleGroupModalCancel}
+          footer={null}
+        >
           <Row gutter={[16, 16]}>
-            {tasks.map(task => (
+            {filteredTasks.map(task => (
               <Col key={task.id} xs={24} sm={12} md={8} lg={6}>
                 <Card
                   title={
@@ -227,7 +274,24 @@ const DashboardPage = () => {
               </Col>
             ))}
           </Row>
-        </div>
+        </Modal>
+        <Row gutter={[16, 16]}>
+          {filteredTasks.map(task => (
+            <Col key={task.id} xs={24} sm={12} md={8} lg={6}>
+              <Card
+                title={
+                  <div className="card-title-container" style={{ backgroundColor: getStatusColor(task.status) }}>
+                    {task.name_task}
+                  </div>
+                }
+              >
+                <p>Estado: {task.status}</p>
+                <Button type="link" onClick={() => showEditModal(task)}>Editar</Button>
+                <Button type="link" danger onClick={() => deleteTask(task.id)}>Eliminar</Button>
+              </Card>
+            </Col>
+          ))}
+        </Row>
       </div>
     </MainLayout>
   );
