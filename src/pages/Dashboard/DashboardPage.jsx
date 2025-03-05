@@ -47,7 +47,7 @@ const DashboardPage = () => {
   useEffect(() => {
     const fetchTasks = async () => {
       const token = localStorage.getItem('authToken');
-      const response = await fetch('http://localhost:5000/api/tasks', {
+      const response = await fetch('https://backtasks-vc1c.onrender.com/api/tasks', {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -91,7 +91,7 @@ const DashboardPage = () => {
 
       let response;
       if (editingTask) {
-        response = await fetch(`http://localhost:5000/api/edit/tasks/${editingTask.id}`, {
+        response = await fetch(`https://backtasks-vc1c.onrender.com/api/edit/tasks/${editingTask.id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -100,7 +100,7 @@ const DashboardPage = () => {
           body: JSON.stringify({ ...values, email }),
         });
       } else {
-        response = await fetch('http://localhost:5000/api/record/tasks', {
+        response = await fetch('https://backtasks-vc1c.onrender.com/api/record/tasks', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -136,7 +136,7 @@ const DashboardPage = () => {
   const deleteTask = async (taskId) => {
     const token = localStorage.getItem('authToken');
     try {
-      const response = await fetch(`http://localhost:5000/api/delete/tasks/${taskId}`, {
+      const response = await fetch(`https://backtasks-vc1c.onrender.com/api/delete/tasks/${taskId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,

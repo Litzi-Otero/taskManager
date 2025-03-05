@@ -33,13 +33,13 @@ const GroupPage = () => {
 
       let response;
       if (decodedToken.rol === 'administrador') {
-        response = await fetch('http://localhost:5000/api/admin/groups', {
+        response = await fetch('https://backtasks-vc1c.onrender.com/api/admin/groups', {
           headers: {
             'Authorization': `Bearer ${token}`,
           },
         });
       } else {
-        response = await fetch('http://localhost:5000/api/groups', {
+        response = await fetch('https://backtasks-vc1c.onrender.com/api/groups', {
           headers: {
             'Authorization': `Bearer ${token}`,
           },
@@ -66,7 +66,7 @@ const GroupPage = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       const token = localStorage.getItem('authToken');
-      const response = await fetch('http://localhost:5000/api/users', {
+      const response = await fetch('https://backtasks-vc1c.onrender.com/api/users', {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -103,7 +103,7 @@ const GroupPage = () => {
       const token = localStorage.getItem('authToken');
       const decodedToken = JSON.parse(atob(token.split('.')[1]));
 
-      const response = await fetch('http://localhost:5000/api/create/groups', {
+      const response = await fetch('https://backtasks-vc1c.onrender.com/api/create/groups', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -178,7 +178,7 @@ const GroupPage = () => {
   
       console.log("Datos que se enviarán al servidor:", requestData);
   
-      const response = await fetch('http://localhost:5000/api/record/user/task', {
+      const response = await fetch('https://backtasks-vc1c.onrender.com/api/record/user/task', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -224,7 +224,7 @@ const GroupPage = () => {
       console.log("Token de autenticación:", token);
       console.log("Nombre del grupo seleccionado:", selectedGroup.name);
   
-      const response = await fetch(`http://localhost:5000/api/groups/add-users`, {
+      const response = await fetch(`https://backtasks-vc1c.onrender.com/api/groups/add-users`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -268,7 +268,7 @@ const GroupPage = () => {
   const showTaskListModal = async () => {
     if (selectedGroup) {
       const token = localStorage.getItem('authToken');
-      const response = await fetch(`http://localhost:5000/api/groups/${selectedGroup.name}/tasks`, { // Cambiar a usar el nombre del grupo
+      const response = await fetch(`https://backtasks-vc1c.onrender.com/api/groups/${selectedGroup.name}/tasks`, { // Cambiar a usar el nombre del grupo
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -290,7 +290,7 @@ const GroupPage = () => {
   const handleStatusChange = async (taskId, newStatus) => {
     const token = localStorage.getItem('authToken');
     try {
-      const response = await fetch(`http://localhost:5000/api/tasks/status/${taskId}`, {
+      const response = await fetch(`https://backtasks-vc1c.onrender.com/api/tasks/status/${taskId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

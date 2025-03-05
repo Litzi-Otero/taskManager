@@ -14,7 +14,7 @@ const GroupMembersPage = () => {
   useEffect(() => {
     const fetchGroup = async () => {
       const token = localStorage.getItem('authToken');
-      const response = await fetch(`http://localhost:5000/api/groups/${groupId}`, {
+      const response = await fetch(`https://backtasks-vc1c.onrender.com/api/groups/${groupId}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -30,7 +30,7 @@ const GroupMembersPage = () => {
 
     const fetchUsers = async () => {
       const token = localStorage.getItem('authToken');
-      const response = await fetch('http://localhost:5000/api/users', {
+      const response = await fetch('https://backtasks-vc1c.onrender.com/api/users', {
         headers: {
           'Authorization': `Bearer ${token}`,
         },

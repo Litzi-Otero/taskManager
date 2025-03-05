@@ -17,7 +17,7 @@ const UsersPage = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       const token = localStorage.getItem('authToken');
-      const response = await fetch('http://localhost:5000/api/users/admin', {
+      const response = await fetch('https://backtasks-vc1c.onrender.com/api/users/admin', {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -33,7 +33,7 @@ const UsersPage = () => {
     console.log('Changing role for user with email:', email, 'to:', newRole); // Agrega este console.log para verificar el email y newRole
     const token = localStorage.getItem('authToken');
     try {
-      const response = await fetch(`http://localhost:5000/api/users/${email}/role`, {
+      const response = await fetch(`https://backtasks-vc1c.onrender.com/api/users/${email}/role`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -55,7 +55,7 @@ const UsersPage = () => {
     console.log('Deleting user with email:', email); 
     const token = localStorage.getItem('authToken');
     try {
-      const response = await fetch(`http://localhost:5000/api/delete/users/${email}`, {
+      const response = await fetch(`https://backtasks-vc1c.onrender.com/api/delete/users/${email}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -75,7 +75,7 @@ const UsersPage = () => {
     console.log('Adding user:', values); 
     const token = localStorage.getItem('authToken');
     try {
-      const response = await fetch('http://localhost:5000/api/add/users', {
+      const response = await fetch('https://backtasks-vc1c.onrender.com/api/add/users', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -106,7 +106,7 @@ const UsersPage = () => {
     console.log('Updating user:', values); 
     const token = localStorage.getItem('authToken');
     try {
-      const response = await fetch(`http://localhost:5000/api/edit/users/${editingUser.email}`, {
+      const response = await fetch(`https://backtasks-vc1c.onrender.com/api/edit/users/${editingUser.email}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
