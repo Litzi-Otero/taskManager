@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { FaTachometerAlt, FaUser, FaEnvelope, FaSignOutAlt, FaBars, FaUsers, FaUserFriends } from 'react-icons/fa';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { FaTachometerAlt, FaUser, FaEnvelope, FaSignOutAlt, FaArrowLeft, FaArrowRight, FaUsers, FaUserFriends } from 'react-icons/fa';
 import './MainLayout.css';
 
 const MainLayout = ({ children }) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [userRol, setUserRol] = useState('');
 
@@ -37,19 +38,16 @@ const MainLayout = ({ children }) => {
   return (
     <div className="main-layout">
       <aside className={`sidebar ${isSidebarCollapsed ? 'collapsed' : ''}`}>
-        <button className="toggle-button" onClick={toggleSidebar}>
-          <FaBars />
-        </button>
         <nav>
           <ul>
-            <li>
+            <li className={location.pathname === '/dashboard' ? 'active' : ''}>
               <Link to="/dashboard">
                 <FaTachometerAlt />
                 {!isSidebarCollapsed && <span> Dashboard</span>}
               </Link>
             </li>
             {userRol === 'master' && (
-              <li>
+              <li className={location.pathname === '/grupos' ? 'active' : ''}>
                 <Link to="/grupos">
                   <FaUsers />
                   {!isSidebarCollapsed && <span> Grupos</span>}
@@ -57,36 +55,36 @@ const MainLayout = ({ children }) => {
               </li>
             )}
             {userRol === 'administrador' && (
-            <li>
-              <Link to="/users">
-                <FaUserFriends />
-                {!isSidebarCollapsed && <span> Usuarios</span>}
-              </Link>
-            </li>
-          )}
-          {userRol === 'administrador' && (
-            <li>
-              <Link to="/grupos">
-                <FaUsers />
-                {!isSidebarCollapsed && <span> Grupos</span>}
-              </Link>
-            </li>
-          )}
-          {userRol === 'user' && (
-            <li>
-              <Link to="/grupo">
-                <FaUsers />
-                {!isSidebarCollapsed && <span> Grupo</span>}
-              </Link>
-            </li>
-          )}
-          <li>
+              <>
+                <li className={location.pathname === '/users' ? 'active' : ''}>
+                  <Link to="/users">
+                    <FaUserFriends />
+                    {!isSidebarCollapsed && <span> Usuarios</span>}
+                  </Link>
+                </li>
+                <li className={location.pathname === '/grupos' ? 'active' : ''}>
+                  <Link to="/grupos">
+                    <FaUsers />
+                    {!isSidebarCollapsed && <span> Grupos</span>}
+                  </Link>
+                </li>
+              </>
+            )}
+            {userRol === 'user' && (
+              <li className={location.pathname === '/grupo' ? 'active' : ''}>
+                <Link to="/grupo">
+                  <FaUsers />
+                  {!isSidebarCollapsed && <span> Grupo</span>}
+                </Link>
+              </li>
+            )}
+            <li className={location.pathname === '/perfil' ? 'active' : ''}>
               <Link to="/perfil">
                 <FaUser />
                 {!isSidebarCollapsed && <span> Perfil</span>}
               </Link>
             </li>
-            <li>
+            <li className={location.pathname === '/contacto' ? 'active' : ''}>
               <Link to="/contacto">
                 <FaEnvelope />
                 {!isSidebarCollapsed && <span> Contacto</span>}
@@ -100,6 +98,9 @@ const MainLayout = ({ children }) => {
             </li>
           </ul>
         </nav>
+        <button className="toggle-button" onClick={toggleSidebar}>
+          {isSidebarCollapsed ? <FaArrowRight /> : <FaArrowLeft />}
+        </button>
       </aside>
       <main className="content">
         {children}

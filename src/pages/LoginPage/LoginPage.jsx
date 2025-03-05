@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Form, Input, Button, message, Typography } from 'antd';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import './LoginPage.css';
 
 const { Title } = Typography;
@@ -14,7 +14,7 @@ const LoginPage = () => {
     const { email, password } = values;
 
     try {
-      const response = await fetch('http://localhost:5000/api/login', {
+      const response = await fetch('https://backtasks-vc1c.onrender.com/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -79,6 +79,9 @@ const LoginPage = () => {
           </Button>
         </div>
       </Form>
+      <div className="register-link">
+        <Link to="/registro">¿No tienes una cuenta? Regístrate aquí</Link>
+      </div>
     </div>
   );
 };

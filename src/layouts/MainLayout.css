@@ -1,15 +1,20 @@
 .main-layout {
   display: flex;
-  min-height: 100vh;
-  background-color: #f0f2f5;
+  height: 100vh; /* Asegura que el layout ocupe toda la altura de la ventana */
+  background-color: #f0f2f5; /* Color de fondo del layout */
+  overflow: hidden; /* Evita el desplazamiento */
 }
 
 .sidebar {
   width: 150px;
-  background-color: #3D253D;
+  background-color: #3D253D; /* Color de fondo de la barra lateral */
   padding: 20px;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   transition: width 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow-y: auto; /* Permite el desplazamiento vertical dentro de la barra lateral */
 }
 
 .sidebar.collapsed {
@@ -23,6 +28,19 @@
   cursor: pointer;
   font-size: 20px;
   margin-bottom: 5px;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #D1A5CE; /* Color de fondo del botón de colapsar */
+  align-self: center;
+  margin-bottom: 20px; /* Move the button to the bottom */
+}
+
+.sidebar .toggle-button:hover {
+  background-color: #d1a5cebe; /* Color de fondo del botón de colapsar al pasar el ratón */
 }
 
 .sidebar nav ul {
@@ -46,9 +64,6 @@
   transition: background-color 0.3s ease;
 }
 
-.sidebar nav ul li a:hover {
-  color: #D1A5CE;
-}
 
 .sidebar nav ul li svg {
   margin-right: 8px;
@@ -74,11 +89,16 @@
 }
 
 .sidebar nav ul li .logout-button:hover {
-  color: #ff4d4f;
+  color: #ff4d4f; /* Color del texto del botón de cerrar sesión al pasar el ratón */
+}
+
+.sidebar nav ul li.active a {
+  background-color: #D1A5CE; /* Color de fondo para el enlace activo */
+  color: #ffffff; /* Color del texto para el enlace activo */
 }
 
 .content {
   flex: 1;
   padding: 20px;
-  margin: 20px;
+  overflow-y: auto; /* Permite el desplazamiento vertical dentro del contenido */
 }

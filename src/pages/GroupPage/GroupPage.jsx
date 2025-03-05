@@ -13,10 +13,12 @@ const GroupPage = () => {
   const navigate = useNavigate();
   const [tasks, setTasks] = useState([]);
   const [filteredTasks, setFilteredTasks] = useState([]);
+  const [groupTasks, setGroupTasks] = useState([]);
   const [userGroup, setUserGroup] = useState(null);
+  const [userEmail, setUserEmail] = useState('');
 
   useEffect(() => {
-    const fetchGroupTasks = async () => {
+    const fetchUserTasks = async () => {
       const token = localStorage.getItem('authToken');
       const response = await fetch('http://localhost:5000/api/user/group/tasks', {
         headers: {
@@ -27,8 +29,25 @@ const GroupPage = () => {
       setFilteredTasks(data);
     };
 
+    const fetchGroupTasks = async (groupName) => {
+      console.log(`Fetching tasks for group: ${groupName}`);
+      const token = localStorage.getItem('authToken');
+      const response = await fetch(`http://localhost:5000/api/groups/${groupName}/tasks`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      const data = await response.json();
+      console.log("Tasks fetched:", data);
+      const filteredGroupTasks = data.filter(task => task.assigned_to !== userEmail);
+      setGroupTasks(filteredGroupTasks);
+    };
+
     const fetchUserGroup = async () => {
       const token = localStorage.getItem('authToken');
+      const decodedToken = JSON.parse(atob(token.split('.')[1]));
+      setUserEmail(decodedToken.email);
+
       const response = await fetch('http://localhost:5000/api/user/group', {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -36,16 +55,33 @@ const GroupPage = () => {
       });
       const data = await response.json();
       if (data.group) {
+        console.log(`User belongs to group: ${data.group.name}`);
         setUserGroup(data.group);
-        fetchGroupTasks();
+        fetchGroupTasks(data.group.name);
       }
     };
 
+    fetchUserTasks();
     fetchUserGroup();
-  }, []);
+
+    const intervalId = setInterval(() => {
+      if (userGroup) {
+        fetchGroupTasks(userGroup.name);
+      }
+    }, 5000); // Polling every 5 seconds
+
+    return () => clearInterval(intervalId); // Cleanup interval on component unmount
+  }, [userGroup]);
 
   const handleStatusChange = async (taskId, status) => {
     const token = localStorage.getItem('authToken');
+    const task = filteredTasks.find(task => task.id === taskId) || groupTasks.find(task => task.id === taskId);
+
+    if (task.assigned_to !== userEmail) {
+      message.error('No tienes permiso para cambiar el estado de esta tarea');
+      return;
+    }
+
     try {
       const response = await fetch(`http://localhost:5000/api/tasks/status/${taskId}`, {
         method: 'PUT',
@@ -59,6 +95,7 @@ const GroupPage = () => {
       if (response.ok) {
         const updatedTask = await response.json();
         setFilteredTasks(filteredTasks.map(task => (task.id === taskId ? updatedTask : task)));
+        setGroupTasks(groupTasks.map(task => (task.id === taskId ? updatedTask : task)));
         message.success('Estado de la tarea actualizado correctamente');
       } else {
         const errorData = await response.json();
@@ -82,14 +119,14 @@ const GroupPage = () => {
       return;
     }
 
-    const draggedTask = filteredTasks.find(task => task.id === draggableId);
+    const draggedTask = filteredTasks.find(task => task.id === draggableId) || groupTasks.find(task => task.id === draggableId);
     const updatedTask = { ...draggedTask, status: destination.droppableId };
 
     await handleStatusChange(draggableId, destination.droppableId);
   };
 
-  const getTasksByStatus = (status) => {
-    return filteredTasks.filter(task => task.status === status);
+  const getTasksByStatus = (status, tasks) => {
+    return tasks.filter(task => task.status === status);
   };
 
   const getStatusColor = (status) => {
@@ -110,7 +147,7 @@ const GroupPage = () => {
   return (
     <MainLayout>
       <div className="group-container">
-        <Title level={2}>Tareas del Grupo: {userGroup ? userGroup.name : ''}</Title>
+        <Title level={2}>Grupo: {userGroup ? userGroup.name : ''}</Title>
         <DragDropContext onDragEnd={onDragEnd}>
           <Row gutter={[16, 16]}>
             {['in-progress', 'done', 'paused', 'revision'].map(status => (
@@ -124,7 +161,7 @@ const GroupPage = () => {
                         ref={provided.innerRef}
                         className="kanban-column-content"
                       >
-                        {getTasksByStatus(status).map((task, index) => (
+                        {getTasksByStatus(status, filteredTasks).map((task, index) => (
                           <Draggable key={task.id} draggableId={task.id} index={index}>
                             {(provided) => (
                               <div
@@ -156,6 +193,53 @@ const GroupPage = () => {
                                       <Option value="revision">En Revisión</Option>
                                     </Select>
                                   </p>
+                                </Card>
+                              </div>
+                            )}
+                          </Draggable>
+                        ))}
+                        {provided.placeholder}
+                      </div>
+                    )}
+                  </Droppable>
+                </div>
+              </Col>
+            ))}
+          </Row>
+          <Title level={3}>Tareas del Grupo</Title>
+          <Row gutter={[16, 16]}>
+            {['in-progress', 'done', 'paused', 'revision'].map(status => (
+              <Col key={status} xs={24} sm={12} md={6}>
+                <div className="kanban-column">
+                  <h3>{status.replace('-', ' ').toUpperCase()}</h3>
+                  <Droppable droppableId={status}>
+                    {(provided) => (
+                      <div
+                        {...provided.droppableProps}
+                        ref={provided.innerRef}
+                        className="kanban-column-content"
+                      >
+                        {getTasksByStatus(status, groupTasks).map((task, index) => (
+                          <Draggable key={task.id} draggableId={task.id} index={index}>
+                            {(provided) => (
+                              <div
+                                ref={provided.innerRef}
+                                {...provided.draggableProps}
+                                {...provided.dragHandleProps}
+                                className="kanban-card"
+                              >
+                                <Card
+                                  title={
+                                    <div className="card-title-container" style={{ backgroundColor: getStatusColor(task.status) }}>
+                                      {task.name_task}
+                                    </div>
+                                  }
+                                >
+                                  <p>Estado: {task.status}</p>
+                                  <p>Descripción: {task.description}</p>
+                                  <p>Fecha límite: {task.dead_line ? moment(task.dead_line).format('DD/MM/YYYY HH:mm') : 'No especificada'}</p>
+                                  <p>Categoría: {task.category}</p>
+                                  <p>Estado: {task.status}</p>
                                 </Card>
                               </div>
                             )}

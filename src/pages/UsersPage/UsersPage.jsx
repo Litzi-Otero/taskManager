@@ -9,7 +9,10 @@ const UsersPage = () => {
   const [users, setUsers] = useState([]);
   const [currentRoleIndex, setCurrentRoleIndex] = useState(0);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [form] = Form.useForm();
+  const [editForm] = Form.useForm();
+  const [editingUser, setEditingUser] = useState(null);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -49,10 +52,10 @@ const UsersPage = () => {
   };
 
   const handleDeleteUser = async (email) => {
-    console.log('Deleting user with email:', email); // Agrega este console.log para verificar el email
+    console.log('Deleting user with email:', email); 
     const token = localStorage.getItem('authToken');
     try {
-      const response = await fetch(`http://localhost:5000/api/users/${email}`, {
+      const response = await fetch(`http://localhost:5000/api/delete/users/${email}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -69,7 +72,7 @@ const UsersPage = () => {
   };
 
   const handleAddUser = async (values) => {
-    console.log('Adding user:', values); // Agrega este console.log para verificar los valores del formulario
+    console.log('Adding user:', values); 
     const token = localStorage.getItem('authToken');
     try {
       const response = await fetch('http://localhost:5000/api/add/users', {
@@ -90,6 +93,37 @@ const UsersPage = () => {
       }
     } catch (error) {
       console.error('Error al agregar el usuario', error);
+    }
+  };
+
+  const handleEditUser = (user) => {
+    setEditingUser(user);
+    editForm.setFieldsValue(user);
+    setIsEditModalVisible(true);
+  };
+
+  const handleUpdateUser = async (values) => {
+    console.log('Updating user:', values); 
+    const token = localStorage.getItem('authToken');
+    try {
+      const response = await fetch(`http://localhost:5000/api/edit/users/${editingUser.email}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify(values),
+      });
+      if (response.ok) {
+        setUsers(users.map(user => (user.email === editingUser.email ? { ...user, ...values } : user)));
+        setIsEditModalVisible(false);
+        setEditingUser(null);
+        editForm.resetFields();
+      } else {
+        console.error('Error al actualizar el usuario');
+      }
+    } catch (error) {
+      console.error('Error al actualizar el usuario', error);
     }
   };
 
@@ -123,6 +157,9 @@ const UsersPage = () => {
             <Option value="administrador">Administrador</Option>
             <Option value="master">Master</Option>
           </Select>
+          <Button type="link" onClick={() => handleEditUser(record)}>
+            Editar
+          </Button>
           <Popconfirm
             title="¿Estás seguro de eliminar este usuario?"
             onConfirm={() => handleDeleteUser(record.email)}
@@ -199,6 +236,45 @@ const UsersPage = () => {
             <Form.Item>
               <Button type="primary" htmlType="submit">
                 Agregar
+              </Button>
+            </Form.Item>
+          </Form>
+        </Modal>
+        <Modal
+          title="Editar Usuario"
+          visible={isEditModalVisible}
+          onCancel={() => setIsEditModalVisible(false)}
+          footer={null}
+        >
+          <Form form={editForm} onFinish={handleUpdateUser}>
+            <Form.Item
+              name="username"
+              label="Nombre de Usuario"
+              rules={[{ required: true, message: 'Por favor ingrese el nombre de usuario' }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              name="email"
+              label="Correo Electrónico"
+              rules={[{ required: true, message: 'Por favor ingrese el correo electrónico' }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              name="rol"
+              label="Rol"
+              rules={[{ required: true, message: 'Por favor seleccione un rol' }]}
+            >
+              <Select>
+                <Option value="user">Usuario</Option>
+                <Option value="administrador">Administrador</Option>
+                <Option value="master">Master</Option>
+              </Select>
+            </Form.Item>
+            <Form.Item>
+              <Button type="primary" htmlType="submit">
+                Actualizar
               </Button>
             </Form.Item>
           </Form>
