@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Table, Select, Button, Popconfirm, Form, Input, Modal } from 'antd';
 import './UsersPage.css';
 import MainLayout from '../../layouts/MainLayout';
@@ -6,6 +7,9 @@ import MainLayout from '../../layouts/MainLayout';
 const { Option } = Select;
 
 const UsersPage = () => {
+  const navigate = useNavigate();
+  const [username, setUsername] = useState('');
+  const [userRol, setUserRol] = useState('');
   const [users, setUsers] = useState([]);
   const [currentRoleIndex, setCurrentRoleIndex] = useState(0);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -15,9 +19,37 @@ const UsersPage = () => {
   const [editingUser, setEditingUser] = useState(null);
 
   useEffect(() => {
+    const checkToken = async () => {
+      const token = localStorage.getItem('authToken');
+    
+      if (!token) {
+        navigate('/login');
+        return;
+      }
+
+      const decodedToken = JSON.parse(atob(token.split('.')[1])); 
+      const expirationTime = decodedToken.exp * 1000;
+      const currentTime = Date.now();
+
+      if (currentTime > expirationTime) {
+        localStorage.removeItem('authToken');
+        navigate('/login');
+      } else {
+        setUsername(decodedToken.username);
+        setUserRol(decodedToken.rol);
+      }
+    };
+
+    checkToken();
+    const intervalId = setInterval(checkToken, 300000);
+    return () => clearInterval(intervalId);
+  }, [navigate]);
+
+  useEffect(() => {
     const fetchUsers = async () => {
       const token = localStorage.getItem('authToken');
-      const response = await fetch('https://backtasks-vc1c.onrender.com/api/users/admin', {
+      //const response = await fetch('https://backtasks-vc1c.onrender.com/api/users/admin', {
+        const response = await fetch('http://localhost:5000/api/users/admin', {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -33,7 +65,8 @@ const UsersPage = () => {
     console.log('Changing role for user with email:', email, 'to:', newRole); // Agrega este console.log para verificar el email y newRole
     const token = localStorage.getItem('authToken');
     try {
-      const response = await fetch(`https://backtasks-vc1c.onrender.com/api/users/${email}/role`, {
+      //const response = await fetch(`https://backtasks-vc1c.onrender.com/api/users/${email}/role`, {
+        const response = await fetch(`http://localhost:5000/api/users/${email}/role`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -55,7 +88,8 @@ const UsersPage = () => {
     console.log('Deleting user with email:', email); 
     const token = localStorage.getItem('authToken');
     try {
-      const response = await fetch(`https://backtasks-vc1c.onrender.com/api/delete/users/${email}`, {
+      //const response = await fetch(`https://backtasks-vc1c.onrender.com/api/delete/users/${email}`, {
+        const response = await fetch(`http://localhost:5000/api/delete/users/${email}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -75,7 +109,8 @@ const UsersPage = () => {
     console.log('Adding user:', values); 
     const token = localStorage.getItem('authToken');
     try {
-      const response = await fetch('https://backtasks-vc1c.onrender.com/api/add/users', {
+      //const response = await fetch('https://backtasks-vc1c.onrender.com/api/add/users', {
+        const response = await fetch('http://localhost:5000/api/add/users', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -106,7 +141,8 @@ const UsersPage = () => {
     console.log('Updating user:', values); 
     const token = localStorage.getItem('authToken');
     try {
-      const response = await fetch(`https://backtasks-vc1c.onrender.com/api/edit/users/${editingUser.email}`, {
+      //const response = await fetch(`https://backtasks-vc1c.onrender.com/api/edit/users/${editingUser.email}`, {
+        const response = await fetch(`http://localhost:5000/api/edit/users/${editingUser.email}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
