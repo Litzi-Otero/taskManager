@@ -49,8 +49,8 @@ const GroupPage = () => {
   useEffect(() => {
     const fetchUserTasks = async () => {
       const token = localStorage.getItem('authToken');
-      //const response = await fetch('https://backtasks-2.onrender.com/api/user/group/tasks', {
-        const response = await fetch('http://localhost:5000/api/user/group/tasks', {
+      const response = await fetch('https://backtasks-2.onrender.com/api/user/group/tasks', {
+        //const response = await fetch('http://localhost:5000/api/user/group/tasks', {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -62,8 +62,8 @@ const GroupPage = () => {
     const fetchGroupTasks = async (groupName) => {
       console.log(`Fetching tasks for group: ${groupName}`);
       const token = localStorage.getItem('authToken');
-      //const response = await fetch(`https://backtasks-2.onrender.com/api/groups/${groupName}/tasks`, {
-        const response = await fetch(`http://localhost:5000/api/groups/${groupName}/tasks`, {
+      const response = await fetch(`https://backtasks-2.onrender.com/api/groups/${groupName}/tasks`, {
+        //const response = await fetch(`http://localhost:5000/api/groups/${groupName}/tasks`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -79,8 +79,8 @@ const GroupPage = () => {
       const decodedToken = JSON.parse(atob(token.split('.')[1]));
       setUserEmail(decodedToken.email);
 
-      //const response = await fetch('https://backtasks-vc1c.onrender.com/api/user/group', {
-        const response = await fetch('http://localhost:5000/api/user/group', {
+      const response = await fetch('https://backtasks-vc1c.onrender.com/api/user/group', {
+        //const response = await fetch('http://localhost:5000/api/user/group', {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -115,8 +115,8 @@ const GroupPage = () => {
     }
 
     try {
-      //const response = await fetch(`https://backtasks-vc1c.onrender.com/api/tasks/status/${taskId}`, {
-        const response = await fetch(`http://localhost:5000/api/tasks/status/${taskId}`, {
+      const response = await fetch(`https://backtasks-vc1c.onrender.com/api/tasks/status/${taskId}`, {
+        //const response = await fetch(`http://localhost:5000/api/tasks/status/${taskId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
